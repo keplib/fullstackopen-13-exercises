@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Sequelize, QueryTypes, Model, DataTypes } = require('sequelize');
 const express = require('express');
 const app = express();
+app.use(express.json());
 
 const sequelize = new Sequelize(process.env.PROJECT_URL);
 
@@ -40,11 +41,19 @@ Blog.init(
 );
 
 app.get('/api/blogs', async (req, res) => {
-  //   const notes = await sequelize.query('SELECT * FROM blogs', { type: QueryTypes.SELECT });
-  //     res.json(notes);
   const blogs = await Blog.findAll();
   res.json(blogs);
 });
+
+app.post('/api/blogs', async (req, res) => {
+  try {
+    const blog = await Blog.create(req.body);
+    res.json(blog);
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
