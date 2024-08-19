@@ -14,6 +14,9 @@ User.init(
     username: {
       type: DataTypes.TEXT,
       allowNull: false,
+      validate: {
+        isEmail: true,
+      },
     },
     password: {
       type: DataTypes.TEXT,

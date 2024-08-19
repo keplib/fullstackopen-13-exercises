@@ -17,6 +17,10 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send({ error: 'Some fields are missing!' });
   }
 
+  if (error.message.includes('Validation error')) {
+    return response.status(400).send({ error: error.message });
+  }
+
   next(error);
 };
 
