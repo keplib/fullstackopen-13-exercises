@@ -3,11 +3,16 @@ const bcrypt = require('bcrypt');
 const { SALT_ROUNDS } = require('../util/config');
 
 const { User } = require('../models');
+const { Blog } = require('../models');
 
 router.get('/', async (req, res, next) => {
   try {
     const users = await User.findAll({
       attributes: { exclude: ['password', 'id'] },
+      include: {
+        model: Blog,
+        attributes: ['author', 'url', 'likes', 'title'],
+      },
     });
     res.json(users);
   } catch (error) {
