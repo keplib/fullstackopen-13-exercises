@@ -19,22 +19,52 @@ const tokenExtractor = (req, res, next) => {
   next();
 };
 
+// router.get('/', async (req, res, next) => {
+//   const where = {};
+
+//   if (req.query.search) {
+//     where.title = {
+//       [Op.iLike]: `%${req.query.search}%`,
+//     };
+//   }
+
+//   try {
+//     const blogs = await Blog.findAll({
+//       include: {
+//         model: User,
+//         attributes: ['name', 'username'],
+//       },
+//       where,
+//     });
+//     res.json(blogs);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
 router.get('/', async (req, res, next) => {
-  const where = {};
+  let where = {};
 
   if (req.query.search) {
-    where.title = {
-      [Op.iLike]: `%${req.query.search}%`,
+    where = {
+      [Op.or]: [
+        {
+          title: {
+            [Op.iLike]: `%${req.query.search}%`,
+          },
+        },
+        {
+          author: {
+            [Op.iLike]: `%${req.query.search}%`,
+          },
+        },
+      ],
     };
   }
 
   try {
     const blogs = await Blog.findAll({
-      include: {
-        model: User,
-        attributes: ['name', 'username'],
-      },
-      where,
+      where: where,
     });
     res.json(blogs);
   } catch (error) {
