@@ -1,7 +1,9 @@
 const Sequelize = require('sequelize');
 const { PROJECT_URL } = require('./config');
 
-const sequelize = new Sequelize(PROJECT_URL);
+const sequelize = new Sequelize(PROJECT_URL, {
+  dialect: 'postgres',
+});
 
 const connectToDatabase = async () => {
   try {
