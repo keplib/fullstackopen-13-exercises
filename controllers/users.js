@@ -6,8 +6,9 @@ const { User } = require('../models');
 
 router.get('/', async (req, res, next) => {
   try {
-    const users = await User.findAll();
-    // TODO exclude password from the query
+    const users = await User.findAll({
+      attributes: { exclude: ['password', 'id'] },
+    });
     res.json(users);
   } catch (error) {
     next(error);
