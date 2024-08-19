@@ -27,11 +27,11 @@ router.post('/', async (req, res, next) => {
 });
 
 router.put('/:username', async (req, res) => {
-  const user = await User.findByPk(req.params.username);
+  const user = await User.findOne({ where: { username: req.params.username } });
   if (user) {
-    blog.likes += 1;
-    await blog.save();
-    res.json(blog);
+    user.username = req.body.username;
+    await user.save();
+    res.json(user);
   } else {
     return res.status(400).send({ error: 'The user with this username cannot be found' });
   }
