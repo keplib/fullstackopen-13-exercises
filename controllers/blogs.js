@@ -42,11 +42,16 @@ router.post('/', tokenExtractor, async (req, res, next) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', tokenExtractor, async (req, res) => {
   const blog = await Blog.findByPk(req.params.id);
+  const user = await User.findByPk(req.decodedToken.id);
   if (blog) {
-    blog.destroy();
-    res.json(blog);
+    if (user && blog.userId === user.id) {
+      blog.destroy();
+      res.json(blog);
+    } else {
+      return res.status(400).send({ error: 'No permission to delete this blog' });
+    }
   } else {
     return res.status(400).send({ error: 'The item with this id cannot be found' });
   }
