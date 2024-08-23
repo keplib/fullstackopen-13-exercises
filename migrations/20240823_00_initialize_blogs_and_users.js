@@ -10,7 +10,6 @@ module.exports = {
       },
       author: {
         type: DataTypes.TEXT,
-        allowNull: true,
       },
       url: {
         type: DataTypes.TEXT,
@@ -23,15 +22,14 @@ module.exports = {
       likes: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
-        allowNull: false,
       },
-      createdAt: {
+      created_at: {
         type: DataTypes.DATE,
-        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         type: DataTypes.DATE,
-        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
     });
     await queryInterface.createTable('users', {
@@ -46,6 +44,8 @@ module.exports = {
         validate: {
           isEmail: true,
         },
+        unique: true,
+        allowNull: false,
       },
       password: {
         type: DataTypes.TEXT,
@@ -53,7 +53,15 @@ module.exports = {
       },
       name: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
+      },
+      created_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
+      updated_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
     });
     await queryInterface.addColumn('blogs', 'user_id', {

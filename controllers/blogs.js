@@ -63,10 +63,11 @@ router.get('/', async (req, res, next) => {
   }
 
   try {
-    const blogs = await Blog.findAll({
-      order: [['likes', 'DESC']],
-      where: where,
-    });
+    // const blogs = await Blog.findAll({
+    //   order: [['likes', 'DESC']],
+    //   where: where,
+    // });
+    const blogs = await Blog.findAll();
     res.json(blogs);
   } catch (error) {
     next(error);

@@ -13,7 +13,6 @@ Blog.init(
     },
     author: {
       type: DataTypes.TEXT,
-      allowNull: true,
     },
     url: {
       type: DataTypes.TEXT,
@@ -26,29 +25,26 @@ Blog.init(
     likes: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
-      allowNull: false,
     },
-    year: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        min: {
-          args: 1991,
-          msg: 'The year should be at least 1991',
-        },
-        max: {
-          args: new Date().getFullYear(),
-          msg: 'The year shouldnt be greater than the current year',
-        },
-      },
-    },
+    // year: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    //   validate: {
+    //     min: {
+    //       args: 1991,
+    //       msg: 'The year should be at least 1991',
+    //     },
+    //     max: {
+    //       args: new Date().getFullYear(),
+    //       msg: 'The year shouldnt be greater than the current year',
+    //     },
+    //   },
+    // },
   },
   {
     sequelize,
     underscored: true,
-    timestamps: true,
-    createdAt: true,
-    updatedAt: true,
+    timestamps: false,
     modelName: 'blog',
   }
 );

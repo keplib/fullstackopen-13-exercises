@@ -2,9 +2,7 @@ const Sequelize = require('sequelize');
 const { PROJECT_URL } = require('./config');
 const { Umzug, SequelizeStorage } = require('umzug');
 
-const sequelize = new Sequelize(PROJECT_URL, {
-  dialect: 'postgres',
-});
+const sequelize = new Sequelize(PROJECT_URL);
 
 const migrationConf = {
   migrations: {
