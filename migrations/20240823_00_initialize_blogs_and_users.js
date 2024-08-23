@@ -55,10 +55,6 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
     });
     await queryInterface.addColumn('blogs', 'user_id', {
       type: DataTypes.INTEGER,
