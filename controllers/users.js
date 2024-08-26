@@ -4,7 +4,7 @@ const { SALT_ROUNDS } = require('../util/config');
 
 const { User } = require('../models');
 const { Blog } = require('../models');
-const ReadingList = require('../models/');
+const { ReadingList } = require('../models/');
 
 router.get('/', async (req, res, next) => {
   try {
@@ -35,9 +35,16 @@ router.get('/:id', async (req, res) => {
         through: {
           attributes: [],
         },
+        include: [
+          {
+            model: ReadingList,
+            attributes: ['read', 'id'],
+          },
+        ],
       },
     ],
   });
+
   if (user) {
     res.json(user);
   } else {
