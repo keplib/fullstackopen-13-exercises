@@ -24,9 +24,20 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
+  const where = {
+    id,
+    '$readings.readingLists.user_id$': id,
+  };
+
+  if (req.query.read === 'true') {
+    where['$readings.readingLists.read$'] = true;
+  } else if (req.query.read === 'false') {
+    where['$readings.readingLists.read$'] = false;
+  }
+
   const user = await User.findOne({
     attributes: ['name', 'username'],
-    where: { id: id },
+    where,
     include: [
       {
         model: Blog,
