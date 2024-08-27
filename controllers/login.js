@@ -25,6 +25,12 @@ router.post('/', async (req, res, next) => {
 
     const token = jwt.sign(userForToken, process.env.SECRET);
 
+    await Session.destroy({
+      where: {
+        userId: user.id,
+      },
+    });
+
     await Session.create({ userId: user.id, token: token });
 
     res.status(200).send({ token, username: user.username, name: user.name });
