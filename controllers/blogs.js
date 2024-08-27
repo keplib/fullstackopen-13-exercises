@@ -5,6 +5,8 @@ const { Op } = require('sequelize');
 const { Blog } = require('../models');
 const { User } = require('../models');
 
+const findUser = require('../util/findUser');
+
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get('authorization');
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
@@ -73,21 +75,57 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.post('/', tokenExtractor, async (req, res, next) => {
+// router.post('/', tokenExtractor, async (req, res, next) => {
+//   try {
+//     const user = await User.findByPk(req.decodedToken.id);
+//     const blog = await Blog.create({ ...req.body, userId: user.id, date: new Date() });
+//     res.json(blog);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+router.post('/', findUser, async (req, res, next) => {
   try {
-    const user = await User.findByPk(req.decodedToken.id);
-    const blog = await Blog.create({ ...req.body, userId: user.id, date: new Date() });
-    res.json(blog);
+    if (!req.user) {
+      throw Error('No user found!');
+    }
+
+    const blog = await Blog.create({
+      ...req.body,
+      userId: req.user.id,
+      date: new Date(),
+    });
+    return res.json(blog);
   } catch (error) {
     next(error);
   }
 });
 
-router.delete('/:id', tokenExtractor, async (req, res) => {
+// router.delete('/:id', tokenExtractor, async (req, res) => {
+//   const blog = await Blog.findByPk(req.params.id);
+//   const user = await User.findByPk(req.decodedToken.id);
+//   if (blog) {
+//     if (user && blog.userId === user.id) {
+//       blog.destroy();
+//       res.json(blog);
+//     } else {
+//       return res.status(400).send({ error: 'No permission to delete this blog' });
+//     }
+//   } else {
+//     return res.status(400).send({ error: 'The item with this id cannot be found' });
+//   }
+// });
+
+router.delete('/:id', findUser, async (req, res) => {
   const blog = await Blog.findByPk(req.params.id);
-  const user = await User.findByPk(req.decodedToken.id);
+
+  if (!req.user) {
+    throw Error('No user found!');
+  }
+
   if (blog) {
-    if (user && blog.userId === user.id) {
+    if (req.user && blog.userId === req.user.id) {
       blog.destroy();
       res.json(blog);
     } else {
